@@ -4,9 +4,8 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import HomeNavbar from "./components/HomeNavbar.jsx";
-import { motion, AnimatePresence } from "framer-motion";
-import AnimatedRoutes from "./components/AnimatedRoutes.jsx";
-import LocationProvider from "./components/LocationProvider.jsx";
+import PrivateComponent from "./components/PrivateComponent.jsx";
+import LoggedInHome from "./components/LoggedInHome.jsx";
 
 function App() {
   return (
@@ -18,6 +17,12 @@ function App() {
             <Route path="/" element={<Homepage/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/signup" element={<Signup/>}/>
+            <Route path="/home" element={
+              <PrivateComponent>
+                <LoggedInHome/>
+              </PrivateComponent>
+            }/>
+
           </Routes>
         </Router>
       </div>

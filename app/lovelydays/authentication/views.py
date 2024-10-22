@@ -11,11 +11,20 @@ from rest_framework.response import Response
 # Create your views here.
 class Test(APIView):
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         return Response(data="hi chat", status=status.HTTP_200_OK)
 
 
-class ObtainTokenViewWithColor(TokenObtainPairView):
+class NonAuthTest(APIView):
+    permission_classes = (permissions.AllowAny,)
+    
+    @staticmethod
+    def get(request):
+        return Response(data="hi chat", status=status.HTTP_200_OK)
+
+
+class ObtainTokenView(TokenObtainPairView):
     serializer_class = ObtainPairSerializer
 
 

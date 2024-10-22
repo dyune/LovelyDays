@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5174',
+]
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -38,6 +42,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),  #
 }
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
@@ -54,7 +59,7 @@ SIMPLE_JWT = {
 }
 
 INSTALLED_APPS = [
-    'frontend_app',
+    'corsheaders',
     'authentication',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -73,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'lovelydays.urls'

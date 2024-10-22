@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
 export default function HomeNavbar() {
+
   return <>
     <div className="navbar bg-primary py-3">
       <div className="flex-1">
@@ -8,10 +9,10 @@ export default function HomeNavbar() {
             <Link to="/">lovelyDays</Link>
           </div>
           <div className="btn btn-ghost">
-            login
+            <Link to="/login">login</Link>
           </div>
           <div className="btn btn-outline">
-            sign up
+            <Link to="/signup">signup</Link>
           </div>
         </ul>
       </div>

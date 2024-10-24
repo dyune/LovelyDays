@@ -1,41 +1,19 @@
-import {useState} from "react";
-import axios from "axios";
-import {data} from "autoprefixer";
-import {axiosInstance} from "./axiosAPI.js";
+import {useContext, useState} from "react";
+import AuthContext from "./AuthProvider.jsx";
 
-axiosInstance.defaults.headers = 'JWT Token';
 export default function Login() {
   console.log("ok")
   const [ username, setUsername ] = useState("");
   const [ password, setPassword ] = useState("");
   const [ showPassword, setShowPassword ] = useState(false);
-
-  function handleSubmit() {
-    console.log("submit");
-    try {
-      let data = {
-        'username': username,
-        'password': password,
-      }
-      console.log(data);
-      const response = axiosInstance.post("/token/login/", data);
-      axiosInstance.defaults.headers['Authorization'] = 'JWT ' + response.data.access;
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-    }
-    catch (Error) {
-      console.log(Error)
-    }
-    finally {
-      console.log("Attempted to login.")
-    }
-  }
+  const { loginUser } = useContext(AuthContext);
 
   function handleUsernameChange(event) {
     setUsername(event.target.value);
   }
 
-  function handleShowPasswordChange() {
+  function handleShowPasswordChange(event) {
+    event.preventDefault();
     setShowPassword((show) => !showPassword); // functional update
   }
 
@@ -79,7 +57,7 @@ export default function Login() {
               </label>
             </div>
             <div className="form-control mt-6">
-              <button onClick={handleSubmit} className="btn btn-primary">Login</button>
+              <button onClick={loginUser} className="btn btn-primary">Login</button>
             </div>
           </form>
         </div>

@@ -6,24 +6,26 @@ import Signup from "./components/Signup.jsx";
 import HomeNavbar from "./components/HomeNavbar.jsx";
 import PrivateComponent from "./components/PrivateComponent.jsx";
 import LoggedInHome from "./components/LoggedInHome.jsx";
+import {AuthProvider} from "./components/AuthProvider.jsx";
 
 function App() {
   return (
     <>
       <div className="flex flex-col min-h-screen">
         <Router>
-          <HomeNavbar />
-          <Routes>
-            <Route path="/" element={<Homepage/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/signup" element={<Signup/>}/>
-            <Route path="/home" element={
-              <PrivateComponent>
-                <LoggedInHome/>
-              </PrivateComponent>
-            }/>
-
-          </Routes>
+          <AuthProvider>
+            <HomeNavbar />
+            <Routes>
+              <Route path="/" element={<Homepage/>}/>
+              <Route path="/login" element={<Login/>}/>
+              <Route path="/signup" element={<Signup/>}/>
+              <Route path="/home" element={
+                <PrivateComponent>
+                  <LoggedInHome/>
+                </PrivateComponent>
+              }/>
+            </Routes>
+          </AuthProvider>
         </Router>
       </div>
     </>

@@ -1,5 +1,9 @@
 import {Link} from "react-router-dom";
+import {useContext} from "react";
+import AuthContext from "./AuthProvider.jsx";
 export default function HomeNavbar() {
+
+  const { user , logoutUser } = useContext(AuthContext);
 
   return <>
     <div className="navbar bg-primary py-3">
@@ -20,6 +24,7 @@ export default function HomeNavbar() {
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li><a>search for a calendar</a></li>
+          {user && <li><a onClick={logoutUser}>logout</a></li>}
         </ul>
       </div>
 

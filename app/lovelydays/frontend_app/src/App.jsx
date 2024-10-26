@@ -9,27 +9,27 @@ import LoggedInHome from "./components/LoggedInHome.jsx";
 import {AuthProvider} from "./components/AuthProvider.jsx";
 
 function App() {
-  return (
-    <>
-      <div className="flex flex-col min-h-screen">
-        <Router>
-          <AuthProvider>
-            <HomeNavbar />
-            <Routes>
-              <Route path="/" element={<Homepage/>}/>
-              <Route path="/login" element={<Login/>}/>
-              <Route path="/signup" element={<Signup/>}/>
-              <Route path="/home" element={
-                <PrivateComponent>
-                  <LoggedInHome/>
-                </PrivateComponent>
-              }/>
-            </Routes>
-          </AuthProvider>
-        </Router>
-      </div>
-    </>
-  )
+    return (
+        <>
+            <div className="flex flex-col min-h-screen">
+                <Router>
+                    <AuthProvider>
+                        <HomeNavbar />
+                        <Routes>
+                            <Route path="/" element={<Homepage/>}/>
+                            <Route path="/login" element={<Login/>}/>
+                            <Route path="/signup" element={<Signup/>}/>
+                            <Route path="/home" element={
+                                <PrivateComponent>
+                                    <LoggedInHome/>
+                                </PrivateComponent>
+                            }/>
+                        </Routes>
+                    </AuthProvider>
+                </Router>
+            </div>
+        </>
+    )
 }
 
 export default App

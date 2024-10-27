@@ -1,26 +1,30 @@
-import {useState, createContext} from "react";
+import {useState, createContext, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
 const AuthContext = createContext(undefined);
 export default AuthContext;
 export function AuthProvider({ children }) {
-    const [ user, setUser ] = useState();
-    const [ tokens, setTokens] = useState(null);
-
+    const [ user, setUser ] = useState(() => { return localStorage.getItem("tokens") || null; });
+    const [ tokens, setTokens ] = useState(() => { return localStorage.getItem("tokens") || null; });
+    const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
 
     async function loginUser(e) {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/auth/token/obtain/", { // wait for API call
-                method: "POST",
-                headers: {
+            // await for API call
+            const response = await fetch(
+                "http://127.0.0.1:8000/auth/token/obtain/",
+                {
+                    method: "POST",
+                    headers: {
                     "Content-Type": "application/json"
-                },
-                body: JSON.stringify({username: e.target.username.value, password: e.target.password.value}) // convert to JSON format
-            })
+                    },
+                    body: JSON.stringify({username: e.target.username.value, password: e.target.password.value}) // convert to JSON format
+                    }
+            )
 
             let data = await response.json(); // wait for response
 
@@ -39,13 +43,62 @@ export function AuthProvider({ children }) {
             console.log(e);
         }
     }
-    function logoutUser(e){
-        e.preventDefault();
+
+    function logoutUser(){
         localStorage.removeItem("tokens");
         setTokens(null);
         setUser(null);
         navigate("/login/");
     }
+
+    async function updateToken() {
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:8000/auth/token/refresh/",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({"refresh" : tokens?.refresh}) // if tokens exist, access refresh or
+                                                                              // else return undefined
+                }
+            )
+            if (response.status === 200) {
+                const data = await response.json();
+                setTokens(data);
+                setUser(jwtDecode(data.access));
+                localStorage.setItem("tokens", JSON.stringify(data));
+            } else {
+                logoutUser()
+            }
+            if (loading) {
+                setLoading(false);
+            }
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect( () => { // runs after render, and after any changes to the dependency list below
+        if (loading) {
+            console.log("refreshed tokens while loading")
+            updateToken();
+        }
+        const REFRESH_TIMER = 1000 * 4 * 60;
+        let interval = setInterval( () => {
+                if (tokens) {
+                    updateToken();
+                    console.log("refreshed while active")
+                    console.log(tokens);
+                }
+            }, REFRESH_TIMER
+        )
+        return () => clearInterval(interval); // cleanup function provided to React, runs this before running
+                                                    // useEffect again
+    }, [tokens, loading] // dependency list below
+    )
 
     let contextData = {
         user: user,

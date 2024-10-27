@@ -13,13 +13,13 @@ class ObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True)
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password')  # In order with UserSerializer.
+        fields = ('username', 'password', 'email')
         # Defines fields that the serializer will be working with. In this case, User.
         extra_kwargs = {'password': {'write_only': True, 'required': True}}
 
@@ -30,3 +30,12 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)  # Later, add back the password.
         instance.save()  # Add to DB.
         return instance
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+    email = serializers.EmailField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')

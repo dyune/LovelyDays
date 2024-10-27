@@ -1,15 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import permissions, viewsets, status
-from .serializer import ObtainPairSerializer, UserSerializer
+from .serializer import ObtainPairSerializer, UserSerializer, UserProfileSerializer
 from rest_framework.response import Response
 
 
 # Create your views here.
-class Test(APIView):
+class Test(APIView):   # TODO: Delete this before prod.
 
     @staticmethod
     def get(request):
@@ -31,6 +33,7 @@ class ObtainTokenView(TokenObtainPairView):
 class Create(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @staticmethod
     def get(self, request):
         return HttpResponse("Hello, world. You're at the polls view.")\
 
@@ -46,4 +49,12 @@ class Create(APIView):
         else:
             return Response(serialized_user.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])  # TODO: NEED TO AUTHENTICATE
+def get_profile(request):
+    user = request.user
+    print(f"Authenticated User: {user}")
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
 

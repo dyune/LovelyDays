@@ -1,5 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt import views as jwt_views
+from . import views
 from .views import ObtainTokenView, Create, Test, NonAuthTest
 
 urlpatterns = [
@@ -8,4 +9,5 @@ urlpatterns = [
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('test/', Test.as_view(), name='test'),
     path('free/', NonAuthTest.as_view(), name='nonauth_test'),
+    path('profile/', views.get_profile, name='get_profile'),
     ]

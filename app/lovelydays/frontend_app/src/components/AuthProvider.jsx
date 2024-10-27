@@ -53,6 +53,8 @@ export function AuthProvider({ children }) {
 
     async function updateToken() {
         try {
+            const tokenValue = JSON.stringify({"refresh" : tokens?.refresh});
+            console.log(tokenValue);
             const response = await fetch(
                 "http://127.0.0.1:8000/auth/token/refresh/",
                 {
@@ -60,8 +62,7 @@ export function AuthProvider({ children }) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({"refresh" : tokens?.refresh}) // if tokens exist, access refresh or
-                                                                              // else return undefined
+                    body: tokenValue // if token exists, access refresh or else return undefined
                 }
             )
             if (response.status === 200) {
